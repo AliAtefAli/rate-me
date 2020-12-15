@@ -14,8 +14,8 @@ class CreateLocationsTable extends Migration
     public function up()
     {
         Schema::create('locations', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('name');
+            $table->id();
+            $table->foreignId('store_id')->constrained('stores')->onDelete('cascade');
             $table->string('latitude');
             $table->string('longitude');
             $table->timestamps();

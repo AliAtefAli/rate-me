@@ -145,46 +145,22 @@
                     });
                 }
             });
-            // Multi delete
-            {{--$("#multi-delete").click(function (e) {--}}
-            {{--    e.preventDefault();--}}
-            {{--    var elements = $('.rocord-check:checked'),--}}
-            {{--        ids = [];--}}
 
-            {{--    elements.each(function () {--}}
-            {{--        ids.push($(this).attr('data-id'));--}}
-            {{--    })--}}
-            {{--    // console.log(elements.length);--}}
-            {{--    // console.log(elements);--}}
-            {{--    // console.log(ids);--}}
-
-            {{--    --}}{{--$.ajax({--}}
-            {{--    --}}{{--    url: "product/delete",--}}
-            {{--    --}}{{--    method: "DELETE",--}}
-
-            {{--    --}}{{--    data: {--}}
-            {{--    --}}{{--        _token: '{{ csrf_token() }}',--}}
-            {{--    --}}{{--        ids: ids,--}}
-            {{--    --}}{{--    },--}}
-
-            {{--    --}}{{--    success: function (response) {--}}
-            {{--    --}}{{--    }--}}
-            {{--    --}}{{--});--}}
-
-            {{--});--}}
             $('#multi-delete').on('click', function (e) {
-                var elements = $('.rocord-check:checked'),
-                    ids = [];
+                var elements = $('.rocord-check:checked');
+                  var  ids = [];
 
                 elements.each(function () {
                     ids.push($(this).attr('data-id'));
                 })
 
+                console.log(ids
+                )
                 $.ajax({
                     url: $(this).data('url'),
                     type: 'DELETE',
                     headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-                    data: ids,
+                    ids: ids,
                     success: function (data) {
                         if (data['success']) {
                             console.log(data['ids']);
@@ -203,6 +179,34 @@
                     }
                 });
 
+
+                // Multi delete
+                {{--$("#multi-delete").click(function (e) {--}}
+                {{--    e.preventDefault();--}}
+                {{--    var elements = $('.rocord-check:checked'),--}}
+                {{--        ids = [];--}}
+
+                {{--    elements.each(function () {--}}
+                {{--        ids.push($(this).attr('data-id'));--}}
+                {{--    })--}}
+                {{--    // console.log(elements.length);--}}
+                {{--    // console.log(elements);--}}
+                {{--    // console.log(ids);--}}
+
+                {{--    --}}{{--$.ajax({--}}
+                {{--    --}}{{--    url: "product/delete",--}}
+                {{--    --}}{{--    method: "DELETE",--}}
+
+                {{--    --}}{{--    data: {--}}
+                {{--    --}}{{--        _token: '{{ csrf_token() }}',--}}
+                {{--    --}}{{--        ids: ids,--}}
+                {{--    --}}{{--    },--}}
+
+                {{--    --}}{{--    success: function (response) {--}}
+                {{--    --}}{{--    }--}}
+                {{--    --}}{{--});--}}
+
+                {{--});--}}
                 //
                 // if (ids.length <= 0) {
                 //     alert("Please select row.");

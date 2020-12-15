@@ -1,20 +1,23 @@
 <aside>
     <div class="user-side">
         <div class="user-img">
-            <img src="{{ asset('assets/dashboard/img/user-img.png') }}" alt="porfile">
+            <img
+                src="@if($site->logo) {{ asset('assets/uploads/site/' . $site->logo ) }} @else {{ asset('assets/dashboard/img/user-img.png') }} @endif"
+                alt="porfile">
         </div>
-        <p>أحمد صالح</p>
+        <p>{{ $site->name }}</p>
     </div>
     <ul>
         <li>
-            <a href="home.html">
+            <a href="{{ route('dashboard.home') }}">
                 <i class="fas fa-home"></i>
                 <span>الرئيسية</span>
             </a>
         </li>
 
+
         <li>
-            <a href="#" class="dorpdown-list">
+            <a href="javascript::void();" class="dorpdown-list">
                 <i class="fas fa-users"></i>
                 <span>الأعضاء</span>
             </a>
@@ -29,7 +32,7 @@
         </li>
 
         <li>
-            <a href="#" class="dorpdown-list">
+            <a href="javascript::void();" class="dorpdown-list">
                 <svg xmlns="http://www.w3.org/2000/svg" width="23.446" height="24.184"
                      viewBox="0 0 23.446 24.184">
                     <g id="service" transform="translate(-3.39 -1.93)">
@@ -51,71 +54,7 @@
         </li>
 
         <li>
-            <a href="#" class="dorpdown-list">
-                <i class="fas fa-store"></i>
-                <span>المتاجر</span>
-            </a>
-            <ul class="dropdown-aside">
-                <li>
-                    <a href="{{ route('store.index') }}">عرض الكل</a>
-                </li>
-                <li>
-                    <a href="{{ route('store.create') }}">إضافة</a>
-                </li>
-            </ul>
-        </li>
-
-        <li>
-            <a href="#" class="dorpdown-list">
-                <i class="fas fa-users"></i>
-                <span>المنيو</span>
-            </a>
-            <ul class="dropdown-aside">
-                <li>
-                    <a href="{{ route('menu.index') }}">عرض الكل</a>
-                </li>
-                <li>
-                    <a href="{{ route('menu.create') }}">إضافة</a>
-                </li>
-            </ul>
-        </li>
-
-        <li>
-            <a href="#" class="dorpdown-list">
-                <svg xmlns="http://www.w3.org/2000/svg" width="21.444" height="17.625"
-                     viewBox="0 0 21.444 17.625">
-                    <g id="Offers" transform="translate(-2.492 -10.999)">
-                        <g id="Group_36" data-name="Group 36" transform="translate(2.492 11)">
-                            <path id="Path_213" data-name="Path 213"
-                                  d="M62.957,30.608a17.517,17.517,0,0,1-.767,1.873,2.263,2.263,0,0,1-.181,1.873,3.558,3.558,0,0,1-.339.542c-.339.451-.79.948-1.286,1.49-.023.045-.068.068-.113.113a.35.35,0,0,1-.474.068.355.355,0,0,1-.068-.542c.045-.045.068-.09.113-.135a11.41,11.41,0,0,0,1.512-1.873c.474-.948.158-1.557-.293-1.828a.867.867,0,0,0-1.2.2,16,16,0,0,1-1.535,1.873,17.766,17.766,0,0,0-1.625,2.076A9.754,9.754,0,0,0,55.69,40.29c-.045.812-.068,1.76-.09,2.325a.511.511,0,0,0,.519.519h3.318a.511.511,0,0,0,.519-.519v-.948a.706.706,0,0,1,.293-.564,14.423,14.423,0,0,0,2.889-2.46c1.354-1.58,1.851-6.229,1.918-7.628A1.07,1.07,0,0,0,62.957,30.608Z"
-                                  transform="translate(-43.614 -25.553)" fill="#fff"/>
-                            <path id="Path_214" data-name="Path 214"
-                                  d="M10.844,36.44a16.064,16.064,0,0,0-1.625-2.076,21.607,21.607,0,0,1-1.535-1.873.867.867,0,0,0-1.2-.2c-.451.271-.79.9-.293,1.828a10.114,10.114,0,0,0,1.512,1.873c.045.045.068.09.113.135a.355.355,0,0,1-.068.542.407.407,0,0,1-.474-.068l-.113-.113c-.5-.542-.948-1.038-1.286-1.49a3.557,3.557,0,0,1-.339-.542,2.181,2.181,0,0,1-.181-1.873,17.516,17.516,0,0,1-.767-1.873,1.07,1.07,0,0,0-2.1.406c.068,1.377.564,6.026,1.918,7.606a16.322,16.322,0,0,0,2.911,2.505.706.706,0,0,1,.293.564v.948a.511.511,0,0,0,.519.519h3.318a.511.511,0,0,0,.519-.519c-.023-.564-.045-1.512-.09-2.325A11.084,11.084,0,0,0,10.844,36.44Z"
-                                  transform="translate(-2.492 -25.63)" fill="#fff"/>
-                            <path id="Path_215" data-name="Path 215"
-                                  d="M35,18.374a.83.83,0,0,0,1.422.587l5.1-5.1a.818.818,0,0,0,0-1.174.845.845,0,0,0-1.174,0l-5.1,5.1A.82.82,0,0,0,35,18.374Z"
-                                  transform="translate(-27.663 -12.123)" fill="#fff"/>
-                            <circle id="Ellipse_5" data-name="Ellipse 5" cx="1.332" cy="1.332" r="1.332"
-                                    transform="translate(7.021 0)" fill="#fff"/>
-                            <circle id="Ellipse_6" data-name="Ellipse 6" cx="1.332" cy="1.332" r="1.332"
-                                    transform="translate(11.76 4.739)" fill="#fff"/>
-                        </g>
-                    </g>
-                </svg>
-                <span>المنتجات </span>
-            </a>
-            <ul class="dropdown-aside">
-                <li>
-                    <a href="{{ route('product.index') }}">عرض الكل</a>
-                </li>
-                <li>
-                    <a href="{{ route('product.create') }}">إضافة</a>
-                </li>
-            </ul>
-        </li>
-
-        <li>
-            <a href="#" class="dorpdown-list">
+            <a href="javascript::void();" class="dorpdown-list">
                 <svg xmlns="http://www.w3.org/2000/svg" width="23.472" height="20.551"
                      viewBox="0 0 23.472 20.551">
                     <g id="order" transform="translate(-3.7 -9.525)">
@@ -137,6 +76,21 @@
         </li>
 
         <li>
+            <a href="javascript::void()" class="dorpdown-list">
+                <i class="fa fa-gift"></i>
+                <span>العروض </span>
+            </a>
+            <ul class="dropdown-aside">
+                <li>
+                    <a href="{{ route('offer.index') }}">عرض الكل</a>
+                </li>
+                <li>
+                    <a href="{{ route('offer.create') }}">إضافة</a>
+                </li>
+            </ul>
+        </li>
+
+        <li>
             <a href="{{ route('site.edit') }}">
                 <i class="fas fa-cog"></i>
                 <span>اعدادات الموقع </span>
@@ -144,10 +98,25 @@
         </li>
 
         <li>
-            <a href="contact.html">
+            <a href="{{ route('role.index') }}">
+                <i class="fa fa-users-cog"></i>
+                <span>الوظائف</span>
+            </a>
+        </li>
+
+        <li>
+            <a href="{{ route('message.index') }}">
                 <i class="fas fa-phone-volume"></i>
-                <span>أتصل بنا</span>
+                <span>الرسائل الواردة</span>
+            </a>
+        </li>
+
+        <li>
+            <a href="{{ route('complaint.index') }}">
+                <i class="fas fa-comments"></i>
+                <span>الشكاوي والمقترحات</span>
             </a>
         </li>
     </ul>
 </aside>
+

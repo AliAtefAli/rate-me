@@ -14,13 +14,12 @@ class CreateOfferTranslationsTable extends Migration
     public function up()
     {
         Schema::create('offer_translations', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
             $table->string('name');
             $table->longText('description');
             $table->string('locale')->index();
-
-            $table->foreignId('offer_id');
-
+            $table->foreignId('offer_id')->constrained('offers')->onDelete('cascade');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

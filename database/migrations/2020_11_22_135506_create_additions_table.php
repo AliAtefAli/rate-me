@@ -14,11 +14,11 @@ class CreateAdditionsTable extends Migration
     public function up()
     {
         Schema::create('additions', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
             $table->double('price');
             $table->integer('quantity');
-            $table->foreignId('menu_id')->references('id')->on('menus')->onDelete('cascade');
-
+            $table->string('image');
+            $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();
         });

@@ -14,13 +14,14 @@ class CreateSettingTranslationsTable extends Migration
     public function up()
     {
         Schema::create('setting_translations', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
             $table->string('name');
             $table->longText('policies');
             $table->longText('description');
             $table->longText('about');
             $table->string('locale');
-            $table->foreignId('setting_id')->references('id')->on('settings')->onDelete('cascade');
+            $table->foreignId('setting_id')->constrained('settings')->onDelete('cascade');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

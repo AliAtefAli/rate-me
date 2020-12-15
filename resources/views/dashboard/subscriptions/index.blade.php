@@ -2,103 +2,106 @@
 
 @section('content')
     <div class="content">
-        <div class="d-table">
+        <div class="latest-offers">
             <div class="container">
-                <div class="table-option">
-                    <div class="detele-option">
-                        <input id="select-all" class="delete-all" type="checkbox" name="">
-                        <label for="select-all">
-                            تحديد الكل
-                        </label>
-                        <button class="btn-all">حذف</button>
-                    </div>
-                    <div class="add-service">
-                        <a href="{{route('subscription.create')}}">
-                            <i class="fas fa-plus-square"></i>
-                        </a>
-                    </div>
-                </div>
-                @include('dashboard.partials.session')
-                <div class="table-responsive">
-                    <table id="example" class="table table-striped table-bordered" style="width:100%">
-                        <thead>
-                        <tr>
-                            <th></th>
-                            <th>رقم</th>
-                            <th>أسم الباقة</th>
-                            <th>وصف الباقة</th>
-                            <th>الحدث</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach($subscriptions as $subscription)
-                            <tr>
-                                <td><input class="rocord-check" type="checkbox"></td>
-                                <td>{{ $subscription->id }}</td>
-                                <td><a href="{{ route('subscription.show', $subscription->id) }}" class="text-primary">{{ $subscription->name }}</a></td>
-                                <td>{{ $subscription->description }}</td>
-
-                                <td>
-                                    <a href="{{ route('subscription.edit', $subscription->id) }}" class="edit btn btn-primary">تعديل</a>
-                                    <a href="#" class="btn btn-danger" data-toggle="modal"
-                                       data-target="#delete-subscription-{{$subscription->id}}">حذف</a>
-                                </td>
-                                <div class="modal fade  custom-imodal" id="delete-subscription-{{$subscription->id}}"
-                                     tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-                                     aria-hidden="true">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLabel">خذف الاشتراك </h5>
-                                                <button type="button" class="close" data-dismiss="modal"
-                                                        aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body custom-addpro">
-                                                <div class="add-form">
-                                                    <div class="contact-page">
-                                                        <form action="{{ route('subscription.destroy', $subscription->id) }}"
-                                                              method="post">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <h2>هل تريد حذف اشتراك "{{ $subscription->name }} " ؟</h2>
-
-                                                            <div class="submit-btn">
-                                                                <button type="submit" class="brown">حذف</button>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
+                <div class="bg-wihte">
+                    <div class="company-info">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="info-item b-shadow">
+                                        <div class="img-block brown">
+                                            <img src="{{ asset('assets/dashboard/img/bill (1).png') }}" alt="">
+                                        </div>
+                                        <div class="info-text">
+                                                <span>
+                                                    نهايه الاشتراك الحالي
+                                                    <span class="end-date"> 12 \ 8 \ 2020</span>
+                                                </span>
+                                            <a href="#" class="joins-ach">
+                                                سجل الاشتراكات
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
-                            </tr>
-                        @endforeach
-                        </tbody>
-                    </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="plans">
+                        <div class="container">
+                            <div class="row">
+
+                                @foreach($subscriptions as $subscription)
+                                    <div class="col-md-4">
+                                        <div class="plan-item">
+                                            <div class="imgs">
+                                                <img src="{{ asset('assets/uploads/subscriptions/' . $subscription->image) }}" alt="">
+                                            </div>
+                                            <div class="txt">
+                                                <p class="name">الاشتراك</p>
+                                                <p class="type">{{ $subscription->name }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                    <div class="plans-pay">
+                        <h3>باقات الدفع </h3>
+                        <p>
+                            هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص
+                            العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة عدد
+                            الحروف التى يولدها التطبيق.
+                        </p>
+                        <form action="">
+                            <ul class="pay-way">
+                                <li>
+                                    <label class="checkcontainer">
+                                        <div class="img">
+                                            <img src="{{ asset('assets/dashboard/img/visa.png') }}" alt="">
+                                        </div>
+                                        <input type="radio" checked="checked" name="radio">
+                                        <span class="radiobtn"></span>
+                                    </label>
+                                </li>
+                                <li>
+                                    <label class="checkcontainer">
+                                        <div class="img">
+                                            <img src="{{ asset('assets/dashboard/img/master.png') }}" alt="">
+                                        </div>
+                                        <input type="radio" name="radio">
+                                        <span class="radiobtn"></span>
+                                    </label>
+                                </li>
+                                <li>
+                                    <label class="checkcontainer">
+                                        <div class="img">
+                                            <img src="{{ asset('assets/dashboard/img/paypal.png') }}" alt="">
+                                        </div>
+                                        <input type="radio" name="radio">
+                                        <span class="radiobtn"></span>
+                                    </label>
+                                </li>
+                                <li>
+                                    <label class="checkcontainer">
+                                        <div class="img">
+                                            <img src="{{ asset('assets/dashboard/img/Mada_Logo.png') }}" alt="">
+                                        </div>
+                                        <input type="radio" name="radio">
+                                        <span class="radiobtn"></span>
+                                    </label>
+                                </li>
+                            </ul>
+                            <button class="btn site-btn brown"> ارسال</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
 @endsection
 @section('script')
-    <script>
-        $(document).ready(function () {
-            // Listen for click on toggle checkbox
-            $('#select-all').click(function (event) {
-                if (this.checked) {
-                    // Iterate each checkbox
-                    $(':checkbox').each(function () {
-                        this.checked = true;
-                    });
-                } else {
-                    $(':checkbox').each(function () {
-                        this.checked = false;
-                    });
-                }
-            });
-        });
-    </script>
+    <script src="{{ asset('assets/dashboard/js/select-all.js') }}"></script>
 @endsection

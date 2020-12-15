@@ -10,10 +10,10 @@ class Addition extends Model
 {
     use Translatable, SoftDeletes;
     public $translatedAttributes = ['name', 'description'];
-    protected $fillable = ['price', 'quantity', 'menu_id'];
+    protected $fillable = ['price', 'quantity', 'product_id', 'image'];
 
     public function products()
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsToMany(Product::class);
     }
 }

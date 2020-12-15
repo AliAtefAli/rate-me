@@ -28,10 +28,10 @@ class StoreUserRequest extends FormRequest
             'name' => 'required|min:3|max:191',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
-            'phone' => ['required', new phoneNumber()],
-            'commercial_register' => ['required', new phoneNumber()],
-            'role' => 'required',
-            'image' => 'required|image|mimes:jpeg,jpg,png,gif|required|max:10000'
+            'phone' => ['required',  'unique:users', new phoneNumber()],
+            'commercial_register' => 'required',
+            'type' => 'required',
+            'image' => 'image|mimes:jpeg,jpg,png,gif|max:10000'
         ];
     }
 }

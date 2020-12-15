@@ -1,5 +1,9 @@
 @extends('dashboard.layouts.master')
 
+@section('style')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/trix/1.3.0/trix.min.css">
+@endsection
+
 @section('content')
     <div class="content">
         <div class="orders">
@@ -29,9 +33,11 @@
                             @foreach(config("app.languages") as $key => $language)
                                 <div class="form-group">
                                     <label> وصف القسم {{$language}}</label>
-                                    <input class="form-control @error("$key.description") is-invalid @enderror"
-                                           type="text" name="{{$key}}[description]">
+                                    <input id="{{$key}}.description" type="hidden" name="{{$key}}[description]"
+                                           value="{{ old("$key.description") }}">
+                                    <trix-editor input="{{$key}}.description"></trix-editor>
                                 </div>
+
                                 @error("$key.description")
                                 <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -46,4 +52,8 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('script')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/trix/1.3.0/trix.min.js"></script>
 @endsection

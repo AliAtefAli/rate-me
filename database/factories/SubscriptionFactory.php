@@ -8,9 +8,9 @@ $factory->define(Subscription::class, function (Faker $faker) {
     return [
         'ar' => ['name' => 'الاشتراك', 'description' => 'وصف الاشتراك'],
         'en' => ['name' => 'Subscription', 'description' => 'description Subscription'],
+        'from_date' => \Carbon\Carbon::now(),
+        'to_date' => \Carbon\Carbon::now(),
         'payment_method' => 'paypal',
-        'start_date' => \Carbon\Carbon::now(),
-        'end_date' => \Carbon\Carbon::now()->addDays(30),
 
     ];
 });

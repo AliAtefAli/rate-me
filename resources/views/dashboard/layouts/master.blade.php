@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     <title>شعائر</title>
+    @yield('before-style')
     <link rel="shortcut icon" href="{{ asset('assets/dashboard/img/logo.png') }}"/>
     <link rel="stylesheet" href="{{ asset('assets/dashboard/css/font-awesome-5all.css') }}"/>
     <link rel="stylesheet" href="{{ asset('assets/dashboard/css/bootstrap.min.css') }}"/>
@@ -14,6 +15,7 @@
     <link rel="stylesheet" href="{{ asset('assets/dashboard/css/animate.css') }}"/>
     <link rel="stylesheet" href="{{ asset('assets/dashboard/css/style.css') }}"/>
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    @yield('style')
 
 </head>
 

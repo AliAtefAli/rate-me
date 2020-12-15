@@ -9,8 +9,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Menu extends Model
 {
     use Translatable, SoftDeletes;
-    protected $fillable = ['store_id'];
-    public $translatedAttributes = ['name', 'description'];
+    protected $fillable = ['image', 'store_id'];
+    public $translatedAttributes = ['name'];
 
     public function store()
     {

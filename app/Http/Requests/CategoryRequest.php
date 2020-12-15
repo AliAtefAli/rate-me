@@ -26,8 +26,7 @@ class CategoryRequest extends FormRequest
         return [
             'ar.name' => 'required|min:3|max:255',
             'en.name' => 'required|min:3|max:255',
-            'ar.description' => 'required|min:3|max:255',
-            'en.description' => 'required|min:3|max:255',
+            'image' => 'required|image|mimes:jpeg,jpg,png,gif|max:10000',
         ];
     }
 }

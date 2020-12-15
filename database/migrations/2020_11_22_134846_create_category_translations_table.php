@@ -14,14 +14,11 @@ class CreateCategoryTranslationsTable extends Migration
     public function up()
     {
         Schema::create('category_translations', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
             $table->string('name');
-            $table->longText('description');
             $table->string('locale')->index();
-
-            // $table->unique(['category_id', 'locale']);
-            $table->foreignId('category_id')->references('id')->on('categories')->onDelete('cascade');
-
+            $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

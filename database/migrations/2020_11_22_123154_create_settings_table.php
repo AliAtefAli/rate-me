@@ -14,15 +14,12 @@ class CreateSettingsTable extends Migration
     public function up()
     {
         Schema::create('settings', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
             $table->string('site_link');
             $table->string('android_link');
             $table->string('ios_link');
             $table->string('logo')->nullable();
-            // *****
             $table->string('email');
-            $table->string('phone')->nullable();
-
             $table->string('delivery_type')->nullable();
             $table->enum('default_language', ['ar', 'en']);
             $table->timestamps();

@@ -14,12 +14,12 @@ class CreateAdditionTranslationsTable extends Migration
     public function up()
     {
         Schema::create('addition_translations', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
             $table->string('name');
             $table->longText('description');
             $table->string('locale')->index();
-
-            $table->foreignId('addition_id');
+            $table->foreignId('addition_id')->constrained('additions')->onDelete('cascade');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

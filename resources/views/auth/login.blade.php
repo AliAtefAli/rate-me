@@ -1,7 +1,11 @@
-@extends('layouts.app')
+@extends('site.layouts.master')
+
+@section('style')
+    <link rel="stylesheet" href="{{ asset('assets/site/css/fixed.css') }}">
+@endsection
 
 @section('content')
-<div class="container">
+<div class="container pt-lg-5">
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
@@ -63,7 +67,12 @@
                                     </a>
                                 @endif
                             </div>
+                            <div class="col-md-8 offset-md-4">
+                                    <a class="btn btn-link" href="{{ route('register') }}">Register</a>
+                            </div>
+
                         </div>
+
                     </form>
                 </div>
             </div>

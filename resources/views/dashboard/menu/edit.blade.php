@@ -27,25 +27,15 @@
                                 @enderror
                             @endforeach
 
-                            @foreach(config("app.languages") as $key => $language)
-                                <div class="form-group">
-                                    <label> وصف المنيو {{$language}}</label>
-                                    <input class="form-control @error("$key.description") is-invalid @enderror"
-                                           type="text" name="{{$key}}[description]" value="{{ $menu->translate($key)->description }}">
-                                </div>
-                                @error("$key.description")
-                                <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            @endforeach
-
-                            <div class="form-group">
-                                <label> المتجر الخاص بالمنيو </label>
-                                <select class="form-control  @error("$key.description") is-invalid @enderror " name="store_id">
-                                    @foreach($stores as $store)
-                                        <option value="{{ $store->id }}" @if($menu->store_id == $store->id) selected @endif>{{ $store->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
+                            <input type="hidden" name="store_id" value="{{ $menu->store_id }}">
+{{--                            <div class="form-group">--}}
+{{--                                <label> المتجر الخاص بالمنيو </label>--}}
+{{--                                <select class="form-control  @error("$key.description") is-invalid @enderror " name="store_id">--}}
+{{--                                    @foreach($menu->stores as $store)--}}
+{{--                                        <option value="{{ $store->id }}" @if($menu->store_id == $store->id) selected @endif>{{ $store->name }}</option>--}}
+{{--                                    @endforeach--}}
+{{--                                </select>--}}
+{{--                            </div>--}}
 
                             <div class="submit-btn">
                                 <button type="submit" class="brown">إضافة المنيو</button>

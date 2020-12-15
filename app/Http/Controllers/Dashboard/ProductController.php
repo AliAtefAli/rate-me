@@ -4,108 +4,84 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductRequest;
+use App\Http\Requests\UpdateProductRequest;
 use App\Models\Menu;
 use App\Models\Product;
 use App\Models\Store;
+use App\Traits\Uploadable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    use Uploadable;
+
     public function index()
     {
-        $products = Product::all();
-
-        $pro = $products->first();
-//        dd($pro->menu->name);
-        return view('dashboard.products.index', compact('products'));
+//        $products = Product::with('menu.translation','translation')
+//            ->paginate(10);
+//
+//        return view('dashboard.products.index', compact('products'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
-        $menus = Menu::all();
-        $stores = Store::all();
-
-        return view('dashboard.products.create', compact('menus', 'stores'));
+//        $menus = Menu::all();
+//        $stores = Store::all();
+//
+//        return view('dashboard.products.create', compact('menus', 'stores'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(ProductRequest $request)
     {
-        // dd($request->all());
-        $product = Product::create($request->all());
-        if ($product) {
-            session()->flash('success', trans('dashboard.product.created successfully'));
-        } else {
-            session()->flash('error', trans('dashboard.product.error created'));
+        $data = $request->validated();
+        if ($request->has('image')) {
+            $path = $this->uploadOne($request['image'], 'products', null, null);
+            $data['image'] = $path;
         }
-        return redirect()->route('product.index');
+        Product::create($data);
+
+        return back()->with('success', trans('dashboard.product.created successfully'));
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show(Product $product)
     {
-
+        // dd($product);
+        return view('dashboard.products.show', compact('product'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Product $product)
+
+    public function update(UpdateProductRequest $request, Product $product)
     {
-        return view('dashboard.products.edit', compact('product'));
+        $data = $request->validated();
+
+        if ($request->has('image')){
+            if (file_exists(asset('assets/uploads/products/' . $product->image))) {
+                unlink(asset('assets/uploads/products/' . $product->image));
+            }
+            $path = $this->uploadOne($request['image'], 'products', null, null);
+            $data['image'] = $path;
+        }
+        $product->update($data);
+
+        return back()->with('success', trans('dashboard.product.updated successfully'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Product $product)
-    {
-        dd($request->all(), $product);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Product $product)
     {
-        //
+        if ($product->additions()) {
+            return back()->with('error', trans('dashboard.product.has additions'));
+        }
+        $product->delete();
+
+        return back()->with('success', trans('dashboard.product.deleted successfully'));
     }
 
     public function delete(Request $request)
     {
-        $ids = $request;
-        return response()->json(['success'=>"Products Deleted successfully." , 'ids' => $request]);
+        $ids = $request->ids;
+        dd($request->all(),$ids);
+        return response()->json(['success'=>"Products Deleted successfully." , 'ids' => $request->ids]);
 //        $ids = $request->ids;
 //        DB::table("products")->whereIn('id',explode(",",$ids))->delete();
 //        return response()->json(['success'=>"Products Deleted successfully." , 'data' => $request->all()]);

@@ -14,13 +14,12 @@ class CreateRatesTable extends Migration
     public function up()
     {
         Schema::create('rates', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
             $table->string('location')->nullable();
             $table->integer('cleanliness');
             $table->integer('price');
             $table->integer('quality');
-
-            $table->foreignId('store_id')->references('id')->on('stores')->onDelete('cascade');
+            $table->foreignId('store_id')->constrained('stores')->onDelete('cascade');
             $table->timestamps();
         });
     }

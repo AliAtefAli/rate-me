@@ -14,9 +14,11 @@ class CreateSubscriptionsTable extends Migration
     public function up()
     {
         Schema::create('subscriptions', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
             $table->enum('payment_method', ['paypal', 'master_card']);
-
+            $table->timestamp('from_date')->nullable();
+            $table->timestamp('to_date')->nullable();
+            $table->string('image');
             $table->softDeletes();
             $table->timestamps();
         });

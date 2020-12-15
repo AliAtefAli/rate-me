@@ -14,11 +14,11 @@ class CreateRateTranslationsTable extends Migration
     public function up()
     {
         Schema::create('rate_translations', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
             $table->longText('description');
             $table->string('locale')->index();
-
-            $table->foreignId('rate_id');
+            $table->foreignId('rate_id')->constrained('rates')->onDelete('cascade');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

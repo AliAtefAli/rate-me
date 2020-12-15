@@ -3,83 +3,72 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreOfferRequest;
+use App\Http\Requests\UpdateOfferRequest;
+use App\Models\Offer;
+use App\Traits\Uploadable;
 use Illuminate\Http\Request;
 
 class OfferController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    use Uploadable;
     public function index()
     {
-        //
+        $offers = Offer::all();
+
+        return view('dashboard.offers.index', compact('offers'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+   public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function store(StoreOfferRequest $request)
+    {
+        $data = $request->validated();
+
+        if ($request->has('image')) {
+            $path = $this->uploadOne($request['image'], 'offers', null, null);
+            $data['image'] = $path;
+        }
+
+        Offer::create($data);
+
+        return back()->with('success', trans('dashboard.offer.created successfully'));
+    }
+
+    public function show(Offer $offer)
     {
         //
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+    public function update(UpdateOfferRequest $request, Offer $offer)
     {
-        //
+        $data = $request->validated();
+
+        if ($request->has('image')) {
+            if (file_exists(public_path('assets/uploads/offers/' . $offer->image))) {
+                unlink( public_path('assets/uploads/offers/' . $offer->image) );
+            }
+            $path = $this->uploadOne($request['image'], 'offers', null, null);
+            $data['image'] = $path;
+        }
+
+        $offer->update($data);
+
+        return back()->with('success', trans('dashboard.offer.updated successfully'));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+    public function destroy(Offer $offer)
     {
-        //
+        $offer->delete();
+
+        return back()->with('success', trans('dashboard.offer.deleted successfully'));
     }
 }

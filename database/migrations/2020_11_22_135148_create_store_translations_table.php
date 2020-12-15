@@ -14,12 +14,12 @@ class CreateStoreTranslationsTable extends Migration
     public function up()
     {
         Schema::create('store_translations', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
             $table->string('name');
             $table->longText('description');
             $table->string('locale')->index();
-
-            $table->foreignId('store_id')->references('id')->on('stores')->onDelete('cascade');
+            $table->foreignId('store_id')->constrained('stores')->onDelete('cascade');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

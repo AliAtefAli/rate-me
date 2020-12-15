@@ -451,11 +451,11 @@ select.form-control.code-num {
     direction: ltr;
 }
 
-input[type=file] {
-    position: absolute;
-    bottom: 0;
-    opacity: 0;
-}
+/*input[type=file] {*/
+/*    position: absolute;*/
+/*    bottom: 0;*/
+/*    opacity: 0;*/
+/*}*/
 
 .sign-types {
     display: flex;
@@ -939,7 +939,9 @@ header .side .mobile-aside {
     padding: 7px 0 !important;
     color: #333;
 }
-
+.dropdown-item {
+    padding: .25rem 1.5rem;
+}
 .d-table .table tbody tr td button,
 .d-table .table tbody tr td a.edit {
     background: #f3f3f3;

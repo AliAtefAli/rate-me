@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\User;
 use Closure;
 
 class Admin
@@ -15,7 +16,7 @@ class Admin
      */
     public function handle($request, Closure $next)
     {
-        if(auth()->user() && auth()->user()->role == 'admin') {
+        if(auth()->user() && auth()->user()->type == User::adminRole) {
             return $next($request);
         } else {
             return redirect('/');

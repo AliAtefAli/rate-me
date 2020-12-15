@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Product extends Model
 {
     use Translatable, SoftDeletes;
-    protected $fillable = ['menu_id', 'price', 'quantity'];
+    protected $fillable = ['menu_id', 'price', 'quantity', 'image'];
     public $translatedAttributes = ['name', 'description'];
 
     public function additions()

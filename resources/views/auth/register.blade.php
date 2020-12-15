@@ -1,6 +1,11 @@
-@extends('layouts.app')
+@extends('site.layouts.master')
+
+@section('style')
+    <link rel="stylesheet" href="{{ asset('assets/site/css/fixed.css') }}">
+@endsection
 
 @section('content')
+    <div class="container pt-lg-5">
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">

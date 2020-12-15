@@ -3,148 +3,77 @@
 @section('content')
 
     <div class="content">
-        <div class="d-table">
-            <div class="container">
-                <div class="table-option">
-                    <div class="detele-option">
-                        <input id="select-all" class="delete-all" type="checkbox" name="">
-                        <label for="select-all">
-                            تحديد الكل
-                        </label>
-                        <a href="#" class="btn btn-danger" data-toggle="modal"
-                           data-target="#delete-users">حذف</a>
-                    </div>
-                    <div class="add-service">
-                        <a href="{{route('user.create')}}">
-                            <i class="fas fa-plus-square"></i>
-                        </a>
-                    </div>
+        <div class="container">
+            <div class="table-option">
+                <div class="detele-option">
+                    <input id="select-all" class="delete-all" type="checkbox" name="">
+                    <label for="select-all">
+                        تحديد الكل
+                    </label>
+                    <a href="#" class="btn btn-danger" data-toggle="modal"
+                       data-target="#delete-users">حذف</a>
                 </div>
-                @include('dashboard.partials.session')
-                <div class="table-responsive">
-                    <table id="example" class="table table-striped table-bordered" style="width:100%">
-                        <thead>
+                <div class="add-service">
+                    <a href="{{route('user.create')}}">
+                        <i class="fas fa-plus-square"></i>
+                    </a>
+                </div>
+            </div>
+            @include('dashboard.partials.session')
+            <div class="table-responsive text-center">
+                <table id="example" class="table" style="width:100%">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>#</th>
+                        <th>الأسم</th>
+                        <th>الرقم</th>
+                        <th>الإيميل</th>
+                        <th>الوظيفة</th>
+                        <th>الحدث</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach($users as $index => $user)
                         <tr>
-                            <th></th>
-                            <th>التسلسل</th>
-                            <th>الأسم</th>
-                            <th>الصورة</th>
-                            <th>الرقم</th>
-                            <th>الإيميل</th>
-                            <th>الوظيفة</th>
-                            <th>الحدث</th>
-                            <th></th>
+                            <td><input class="rocord-check" type="checkbox" name="item[]" value="{{ $user->id }}"></td>
+                            <td>{{ $index + 1 }}</td>
+                            <td><a href="{{ route('user.show', $user) }}" class="text-primary">{{ $user->name }}</a>
+                            </td>
+                            <td>{{ $user->phone }}</td>
+                            <td>{{ $user->email }}</td>
+                            <td> @if ($user->role) {{$user->role->display_name}} @endif </td>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="btn btn-secondary dropdown-toggle" type="button"
+                                            id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                                            aria-expanded="false">
+                                        اختيارات
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <a href="#" class="dropdown-item text-primary" data-toggle="modal"
+                                           data-target="#changePassword">تغير كلمة المرور</a>
+                                        <a href="#" class="dropdown-item text-success" data-toggle="modal"
+                                           data-target="#changeRole">تغير الوظيفة الخاصة به</a>
+                                        <a href="{{ route('user.edit', $user->id) }}"
+                                           class="dropdown-item text-secondary">تعديل</a>
+                                        <a href="#" class="dropdown-item text-danger" data-toggle="modal"
+                                           data-target="#delete-user-{{$user->id}}">حذف</a>
+                                    </div>
+                                </div>
+                            </td>
+                            @include('dashboard.users.modal_delete')
                         </tr>
-                        </thead>
-                        <tbody>
-                        @foreach($users as $user)
-                            <tr>
-                                <td><input class="rocord-check" type="checkbox" name="item[]" value="{{ $user->id }}"></td>
-                                <td>{{ $user->id }}</td>
-                                <td>{{ $user->name }}</td>
-                                <td>
-                                    <img src="{{ asset('assets/uploads/users/' . $user->image) }}" alt="Image"
-                                         width="50">
-                                </td>
-
-                                <td>{{ $user->phone }}</td>
-                                <td>{{ $user->email }}</td>
-                                <td>{{ $user->role }}</td>
-
-                                <td>
-                                    <a href="{{ route('user.edit', $user->id) }}" class="edit btn btn-primary">تعديل</a>
-                                    <a href="#" class="btn btn-danger" data-toggle="modal"
-                                       data-target="#delete-user-{{$user->id}}">حذف</a>
-                                </td>
-
-                                <div class="modal fade  custom-imodal" id="delete-user-{{$user->id}}" tabindex="-1"
-                                     role="dialog" aria-labelledby="exampleModalLabel"
-                                     aria-hidden="true">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLabel">خذف المستخدم</h5>
-                                                <button type="button" class="close" data-dismiss="modal"
-                                                        aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body custom-addpro">
-                                                <div class="add-form">
-                                                    <div class="contact-page">
-                                                        <form action="{{ route('user.destroy', $user->id) }}"
-                                                              method="post">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <h2>هل تريد خذف هذا المستخدم ؟</h2>
-
-                                                            <div class="submit-btn">
-                                                                <button type="submit" class="brown">حذف</button>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="modal fade  custom-imodal" id="delete-users" tabindex="-1"
-                                     role="dialog" aria-labelledby="exampleModalLabel"
-                                     aria-hidden="true">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLabel">خذف متعدد</h5>
-                                                <button type="button" class="close" data-dismiss="modal"
-                                                        aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body custom-addpro">
-                                                <div class="add-form">
-                                                    <div class="contact-page">
-                                                        <form action="{{ route('user.destroy', $user->id) }}" method="post">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <h2>هل تريد خذف هذا المستخدم ؟</h2>
-
-                                                            <div class="submit-btn">
-                                                                <button type="submit" class="brown">حذف</button>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </tr>
-                        @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                    @endforeach
+                    </tbody>
+                </table>
+                {{ $users->links() }}
+                @include('dashboard.users.modal_multi_delete')
             </div>
         </div>
     </div>
 @endsection
 @section('script')
-    <script>
-        $(document).ready(function () {
-            // Listen for click on toggle checkbox
-            $('#select-all').click(function (event) {
-                if (this.checked) {
-                    // Iterate each checkbox
-                    $(':checkbox').each(function () {
-                        this.checked = true;
-                    });
-                } else {
-                    $(':checkbox').each(function () {
-                        this.checked = false;
-                    });
-                }
-            });
-        });
-    </script>
+    <script src="{{ asset('assets/dashboard/js/select-all.js') }}"></script>
 @endsection

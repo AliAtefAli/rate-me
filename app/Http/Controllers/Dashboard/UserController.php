@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Models\Role;
 use App\Models\User;
 use App\Traits\Uploadable;
 use Illuminate\Http\Request;
@@ -13,121 +15,96 @@ use Illuminate\Support\Facades\Hash;
 class UserController extends Controller
 {
     use Uploadable;
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        $users = User::all();
+        $users = User::latest()->paginate(25);
+
         return view('dashboard.users.index', compact('users'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         return view('dashboard.users.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(StoreUserRequest $request)
     {
+        $data = $request->validated();
 
-        User::create([
-            "name" => $request->name,
-            "email" => $request->email,
-            "phone" => $request->phone,
-            "commercial_register" => $request->commercial_register,
-            "password" => Hash::make($request->password),
-            "role" => $request->role
-        ]);
+        $data['country_key'] = User::getPhone($request->phone)['key'];
+        $data['phone'] = User::getPhone($request->phone)['phone'];
+
+        if ($request->has('image')) {
+            $path = $this->uploadOne($request['image'], 'users', null, null);
+            $data['image'] = $path;
+        }
+
+        User::create($data);
 
         return redirect()->route('user.index');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
     public function show(User $user)
     {
-        return view('dashboard.users.show', compact('user'));
+        $roles = Role::all();
+
+        return view('dashboard.users.show', compact('user', 'roles'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param User $user
-     * @return \Illuminate\Http\Response
-     */
     public function edit(User $user)
     {
         return view('dashboard.users.edit', compact('user'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(UpdateUserRequest $request, User $user)
     {
+        $data = $request->validated();
         if ($request->has('image')) {
             $path = $this->uploadOne($request['image'], 'users', null, null);
-            $user->image = $path;
-            $user->save();
+            $data['image'] = $path;
         }
-        $updated = $user->update($request->all());
+        $user->update($data);
 
-        if ($updated) {
-            session()->flash('success', 'تم تعديل بيانات المستخدم بنجاح');
-        } else {
-            session()->flash('error', 'لم يتم تعديل هذا المستخدم من فضلك اعد مرة اخري');
-        }
-
-        return redirect()->route('user.index');
+        return redirect()->route('user.index')->with('success', trans('dashboard.user.updated successfully'));
 
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function destroy(User $user, Request $request)
     {
-        // dd($user, $request->all());
-
-        $deleted = $user->forceDelete();
-
-        if ($deleted) {
-            session()->flash('success', 'تم حذف هذا المستخدم بنجاح');
+        if (count($user->store()) > 0) {
+            return redirect()->route('user.index')->with('error', trans('dashboard.user.error deleted'));
         } else {
-            session()->flash('error', 'لم يتم خذف هذا المستخدم من فضلك اعد مرة اخري');
+            $user->delete();
+            return redirect()->route('user.index')->with('success', trans('dashboard.user.deleted successfully'));
         }
+    }
 
-        return redirect()->route('user.index');
+    public function changePassword(ChangePasswordRequest $request, User $user)
+    {
+        if (Hash::check($request->old_password, $user->password)) {
+            $user->password = Hash::make($request->password);
+            $user->save();
+
+            return back()->with('success', trans('dashboard.user.password changed'));
+        } else {
+            return back()->with('error', trans('dashboard.user.wrong password'));
+        }
+    }
+
+    public function changeRole(Request $request, User $user)
+    {
+        $role = Role::where('name', $request->role)->get();
+
+        $user->role_id = $role[0]->id;
+        $user->save();
+
+        return back()->with('success', trans('dashboard.user.updated successfully'));
     }
 
     public function delete(Request $request)
     {
-        // dd($request->all());
+        dd($request->all());
         return \request();
     }
 }

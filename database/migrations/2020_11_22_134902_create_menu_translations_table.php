@@ -14,12 +14,11 @@ class CreateMenuTranslationsTable extends Migration
     public function up()
     {
         Schema::create('menu_translations', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
             $table->string('name');
-            $table->longText('description');
             $table->string('locale')->index();
-
-            $table->foreignId('menu_id')->references('id')->on('menus')->onDelete('cascade');
+            $table->foreignId('menu_id')->constrained('menus')->onDelete('cascade');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

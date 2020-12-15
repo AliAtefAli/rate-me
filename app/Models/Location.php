@@ -8,7 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Location extends Model
 {
     use Translatable;
-    public $translatedAttributes = ['name'];
+    public $translatedAttributes = ['store_id'];
     protected $fillable = ['latitude', 'longitude'];
 
+    public function stores()
+    {
+        return $this->hasMany(Store::class);
+    }
 }

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreRequest;
+use App\Http\Requests\UpdateStoreRequest;
 use App\Models\Category;
 use App\Models\Store;
 use App\Models\User;
@@ -13,114 +15,73 @@ class StoreController extends Controller
 {
     use Uploadable;
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        $stores = Store::all();
-        return view('dashboard.stores.index', compact('stores'));
+//        $stores = Store::with('category.translation', 'translation')
+//            ->paginate(10);
+//        return view('dashboard.stores.index', compact('stores'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function create()
     {
-        $categories = Category::all();
-        $users = User::all();
-        return view('dashboard.stores.create', compact('categories', 'users'));
+//        $categories = Category::all();
+//        $users = User::all();
+//        return view('dashboard.stores.create', compact('categories', 'users'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+
+    public function store(StoreRequest $request)
     {
-        // dd($request->all());
-        $store = Store::create($request->all());
+        $data = $request->validated();
 
-        if ($store) {
-            session()->flash('success', 'تم اضافة المتجر بنجاح');
-        } else {
-            session()->flash('error', 'لم يتم اضافة المتجر من فضلك اعد مرة اخري');
+        if ($request->has('image')) {
+            $path = $this->uploadOne($request['image'], 'stores', null, null);
+            $data['image'] = $path;
         }
+        Store::create($data);
 
-        return redirect()->route('store.index');
+        return back()->with('success', trans('dashboard.store.created successfully'));
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function show(Store $store)
     {
+        $store->load('menus.translation');
         return view('dashboard.stores.show', compact('store'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function edit(Store $store)
     {
-        $categories = Category::all();
-        return view('dashboard.stores.edit', compact('store', 'categories'));
+//        $categories = Category::all();
+//
+//        return view('dashboard.stores.edit', compact('store', 'categories'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Store $store)
+
+    public function update(UpdateStoreRequest $request, Store $store)
     {
-        // dd($store, $request->all());
+        $data = $request->all();
         if ($request->has('image')) {
             $path = $this->uploadOne($request['image'], 'stores', null, null);
-            $store->image = $path;
-            $store->save();
-        }
-        $updated = $store->update($request->all());
-
-        if ($updated) {
-            session()->flash('success', 'تم تعديل بيانات المتجر بنجاح');
-        } else {
-            session()->flash('error', 'لم يتم تعديل هذا المتجر من فضلك اعد مرة اخري');
+            $data['image'] = $path;
         }
 
-        return redirect()->route('store.index');
+        $store->update($data);
+
+        return redirect()->route('category.show', $store->category_id)
+            ->with('success', trans('dashboard.store.updated successfully'));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function destroy(Store $store)
     {
-        $deleted = $store->delete();
-
-        if ($deleted) {
-            session()->flash('success', 'تم حذف المتجر بنجاح');
-        } else {
-            session()->flash('error', 'لم يتم حذف هذا المتجر من فضلك اعد مرة اخري');
+        if ($store->menus()->count() > 0) {
+            return back()->with('error', trans('dashboard.store.has menus'));
         }
+        $store->delete();
 
-        return redirect()->route('store.index');
+        return back()->with('success', trans('dashboard.store.deleted successfully'));
     }
 }

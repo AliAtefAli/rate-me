@@ -3,83 +3,75 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreAdditionRequest;
+use App\Http\Requests\UpdateAdditionRequest;
+use App\Models\Addition;
+use App\Traits\Uploadable;
 use Illuminate\Http\Request;
 
 class AdditionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
+    use Uploadable;
     public function index()
     {
         //
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+
+    public function store(StoreAdditionRequest $request)
     {
-        //
+        $data = $request->validated();
+
+        if ($request->has('image')) {
+            $path = $this->uploadOne($request['image'], 'additions', null, null);
+            $data['image'] = $path;
+        }
+        Addition::create($data);
+
+        return back()->with('success', trans('dashboard.addition.created successfully'));
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+
+    public function show(Addition $addition)
     {
-        //
+        return view('dashboard.additions.show', compact('addition'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function edit($id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+
+    public function update(UpdateAdditionRequest $request, Addition $addition)
     {
-        //
+        $data = $request->validated();
+
+        if ($request->has('image')) {
+            if (file_exists(public_path('assets/uploads/additions/' . $addition->image))) {
+                unlink(public_path('assets/uploads/additions/' . $addition->image));
+            }
+            $path = $this->uploadOne($request['image'], 'additions', null, null);
+            $data['image'] = $path;
+        }
+        $addition->update($data);
+
+        return back()->with('success', trans('dashboard.addition.updated successfully'));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+
+    public function destroy(Addition $addition)
     {
-        //
+        $addition->delete();
+
+        return back()->with('success', trans('dashboard.addition.deleted successfully'));
     }
 }

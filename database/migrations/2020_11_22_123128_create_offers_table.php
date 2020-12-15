@@ -14,10 +14,9 @@ class CreateOffersTable extends Migration
     public function up()
     {
         Schema::create('offers', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
             $table->string('url')->nullable();
-            $table->foreignId('store_id')->nullable();
-
+            $table->string('image');
             $table->softDeletes();
             $table->timestamps();
         });

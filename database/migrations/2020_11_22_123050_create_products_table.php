@@ -14,11 +14,10 @@ class CreateProductsTable extends Migration
     public function up()
     {
         Schema::create('products', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->foreignId('menu_id')->references('id')->on('menus')->onDelete('cascade');
+            $table->id();
+            $table->foreignId('menu_id')->constrained('menus')->onDelete('cascade');
             $table->double('price');
             $table->integer('quantity');
-
             $table->softDeletes();
             $table->timestamps();
         });

@@ -14,11 +14,11 @@ class CreateLocationTranslationsTable extends Migration
     public function up()
     {
         Schema::create('location_translations', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
             $table->string('name');
             $table->string('locale')->index();
-
-            $table->foreignId('location_id');
+            $table->foreignId('location_id')->constrained('locations')->onDelete('cascade');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

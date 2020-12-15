@@ -7,8 +7,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
     use  Notifiable, SoftDeletes;
 
@@ -22,8 +23,16 @@ class User extends Authenticatable
         'email',
         'password',
         'commercial_register',
-        'role',
+        'phone',
+        'country_key',
+        'type',
+        'role_id',
+        'image'
     ];
+
+    public const adminRole = 'admin';
+    public const storeOwnerRole = 'store-owner';
+    public const userRole = 'user';
 
     /**
      * The attributes that should be hidden for arrays.
@@ -43,6 +52,16 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
 
     public function wallet()
     {
@@ -64,9 +83,9 @@ class User extends Authenticatable
         return $this->belongsToMany(Subscription::class);
     }
 
-    public function roles()
+    public function role()
     {
-        return $this->belongsToMany(Role::class);
+        return $this->belongsTo(Role::class);
     }
 
     public function permissions()
@@ -76,6 +95,36 @@ class User extends Authenticatable
 
     public function store()
     {
-        $this->hasOne(Store::class);
+        return $this->hasOne(Store::class);
+    }
+
+    public static function getPhone($phone)
+    {
+        $data = [];
+        // if start with +
+        if (substr($phone, 0, 1) == '+') {
+            // Egypt
+            if (substr($phone, 1, 1) == '2') {
+                $data['key'] = substr($phone, 0, 2);
+                $data['phone'] = substr($phone, 2);
+                // saudi arabia
+            } else {
+                $data['key'] = substr($phone, 0, 4);
+                $data['phone'] = substr($phone, 4);
+            }
+            // if start with '00'
+        } else {
+            // Egypt
+            if (substr($phone, 2, 1) == '2') {
+                $data['key'] = substr($phone, 0, 3);
+                $data['phone'] = substr($phone, 3);
+                // Saudi arabia
+            } else {
+                // $key = substr($phone, 0, 5);
+                $data['key'] = substr($phone, 0, 5);
+                $data['phone'] = substr($phone, 5);
+            }
+        }
+        return $data;
     }
 }

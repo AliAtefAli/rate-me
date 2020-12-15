@@ -6,112 +6,88 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
 use App\Models\Store;
+use App\Traits\Uploadable;
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    use Uploadable;
+
     public function index()
     {
-        $categories = Category::all();
+        $categories = Category::with('translation')
+            ->paginate(10);
+
         return view('dashboard.categories.index', compact('categories'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function create()
     {
-        return view('dashboard.categories.create');
+//        return view('dashboard.categories.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(CategoryRequest $request)
     {
-        Category::create([
-            'ar' => ['name' => $request->ar['name'], 'description' => $request->ar['description']],
-            'en' => ['name' => $request->en['name'], 'description' => $request->en['description']],
-        ]);
+        $data = $request->validated();
 
-        return redirect()->route('category.index');
+        if ($request->has('image')) {
+            $path = $this->uploadOne($request['image'], 'categories', null, null);
+            $data['image'] = $path;
+        }
+
+        Category::create($data);
+
+        return back()->with('success', trans('dashboard.category.created successfully'));
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function show(Category $category)
     {
-        $stores = Store::where('category_id', $category->id);
+        $category->load('stores.translations', 'translation');
 
-        dd($stores->first());
-        return view('dashboard.categories.show', compact('stores'));
+        $users = User::all();
+
+        return view('dashboard.categories.show', compact('category', 'users'));
 
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function edit(Category $category)
     {
-        return view('dashboard.categories.edit', compact('category'));
+//        return view('dashboard.categories.edit', compact('category'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function update(CategoryRequest $request, Category $category)
     {
-        $updated = $category->update([
-            'ar' => ['name' => $request->ar['name'], 'description' => $request->ar['description']],
-            'en' => ['name' => $request->en['name'], 'description' => $request->en['description']],
-        ]);
+        $data = $request->validated();
 
-        if ($updated) {
-            session()->flash('success', 'تم تعديل القسم بنجاح');
-        } else {
-            session()->flash('error', 'لم يتم تعديل القسم من فضلك اعد مرة اخري');
+        if ($request->has('image')) {
+            if (file_exists(asset('assets/uploads/categories/' . $category->image))) {
+                unlink( asset('assets/uploads/categories/' . $category->image) );
+            }
+            $path = $this->uploadOne($request['image'], 'categories', null, null);
+            $data['image'] = $path;
         }
 
-        return redirect()->route('category.index');
+        $category->update($data);
+
+        return back()->with('success', trans('dashboard.category.updated successfully'));
 
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function destroy(Category $category)
     {
-        $deleted = $category->delete();
-        if ($deleted) {
-            session()->flash('success', 'تم حذف القسم بنجاح');
-        } else {
-            session()->flash('error', 'لم يتم حذف القسم من فضلك اعد مرة اخري');
-        }
+        if ($category->stores()->count() > 0) {
+            return redirect()->route('category.index')->with('error', trans('dashboard.category.has menus'));
 
-        return redirect()->route('category.index');
+        }
+        $category->delete();
+
+        return redirect()->route('category.index')->with('success', trans('dashboard.category.deleted successfully'));
     }
 }

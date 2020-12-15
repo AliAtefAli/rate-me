@@ -14,12 +14,9 @@ class SubscriptionUser extends Migration
     public function up()
     {
         Schema::create('subscription_user', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->foreignId('subscription_id')->references('id')->on('subscriptions')->onDelete('cascade');
-            $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->timestamp('start_date');
-            $table->timestamp('end_date');
-
+            $table->id();
+            $table->foreignId('subscription_id')->constrained('subscriptions')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

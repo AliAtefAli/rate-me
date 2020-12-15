@@ -14,15 +14,15 @@ class CreateStoresTable extends Migration
     public function up()
     {
         Schema::create('stores', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
             $table->string('phone');
             $table->string('store_site')->nullable();
             $table->string('image')->nullable();
+            //enum
             $table->string('delivery_type')->nullable();
-            $table->integer('delivery_price')->nullable();
-            $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreignId('category_id')->references('id')->on('categories')->onDelete('cascade');
-
+            $table->float('delivery_price')->nullable();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();
         });

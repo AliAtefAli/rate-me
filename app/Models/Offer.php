@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Offer extends Model
 {
     use Translatable, SoftDeletes;
-    protected $fillable = ['store_id', 'url'];
+    protected $fillable = ['image', 'url'];
     public $translatedAttributes = ['name', 'description'];
 
     public function store()

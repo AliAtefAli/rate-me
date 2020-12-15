@@ -12,18 +12,17 @@ class SiteRequest extends FormRequest
         return [
             'ar.name' => 'required|min:3|max:255',
             'en.name' => 'required|min:3|max:255',
-            'ar.policies' => 'required|min:3|max:255',
-            'en.policies' => 'required|min:3|max:255',
-            'ar.description' => 'required|min:3|max:255',
-            'en.description' => 'required|min:3|max:255',
-            'ar.about' => 'required|min:3|max:255',
-            'en.about' => 'required|min:3|max:255',
+            'ar.policies' => 'required|min:3',
+            'en.policies' => 'required|min:3',
+            'ar.description' => 'required|min:3',
+            'en.description' => 'required|min:3',
+            'ar.about' => 'required|min:3',
+            'en.about' => 'required|min:3',
             'site_link' => 'required|url',
             'android_link' => 'required|url',
             'ios_link' => 'required|url',
-            'email' => 'required|url',
-            'logo' => 'required|image|mimes:jpeg,jpg,png,gif|required|max:10000',
-            'phone' => ['required', new phoneNumber()],
+            'email' => 'required|email',
+            'logo' => 'image|mimes:jpeg,jpg,png,gif|max:10000',
         ];
     }
 

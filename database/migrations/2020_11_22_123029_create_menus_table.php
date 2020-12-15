@@ -14,9 +14,8 @@ class CreateMenusTable extends Migration
     public function up()
     {
         Schema::create('menus', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->foreignId('store_id')->references('id')->on('stores')->onDelete('cascade');
-
+            $table->id();
+            $table->foreignId('store_id')->constrained('stores')->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();
         });

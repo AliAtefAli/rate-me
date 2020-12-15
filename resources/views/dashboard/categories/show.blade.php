@@ -1,90 +1,66 @@
 @extends('dashboard.layouts.master')
 
+@section('style')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/trix/1.3.0/trix.min.css">
+@endsection
+
 @section('content')
     <div class="content">
-        <div class="d-table">
+        <div class="add-offer">
             <div class="container">
-                <div class="table-option">
-                    <div class="detele-option">
-                        <input class="delete-all" type="checkbox" name="">
-                        <label>
-                            تحديد الكل
-                        </label>
-                        <button class="btn-all">حذف</button>
-                    </div>
-                    <div class="add-service">
-                        <a href="{{route('store.create')}}">
-                            <i class="fas fa-plus-square"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="table-responsive">
-                    <table id="example" class="table table-striped table-bordered" style="width:100%">
-                        <thead>
+                @include('dashboard.partials.errors')
+                @include('dashboard.partials.session')
+
+                <div class="list-group">
+                    <a href="#" class="list-group-item list-group-item-action active text-center">
+                        المتاجر الخاصة بقسم  "{{ $category->name }} "</a>
+                    <table class="table">
+                        <thead class="thead-light">
                         <tr>
-                            <th></th>
-                            <th>رقم</th>
-                            <th>أسم المتجر</th>
-                            <th>القسم الخاص به</th>
-                            <th>الحدث</th>
-                            <th></th>
+                            <th scope="col">#</th>
+                            <th scope="col">اسم المتجر</th>
+                            <th scope="col">وصف المتجر</th>
+                            <th scope="col">الحدث</th>
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach($stores as $store)
+                        @foreach($category->stores as $index=> $store)
                             <tr>
-                                <td><input class="rocord-check" type="checkbox"></td>
-                                <td>{{ $store->id }}</td>
-                                <td><a href="{{ route('store.show', $store) }}">{{ $store->name }}</a></td>
-                                <td>{{ $store->category->name }}</td>
-
+                                <th scope="row">{{ $index + 1 }}</th>
                                 <td>
-                                    <a href="{{ route('store.edit', $store->id) }}" class="edit btn btn-primary">تعديل</a>
-                                    <a href="#" class="btn btn-danger" data-toggle="modal" data-target="#delete-store-{{$store->id}}" >حذف</a>
+                                    <a href="{{ route('store.show', $store) }}" class="text-primary">{{ $store->name }}</a>
                                 </td>
-
+                                <td>{!!  $store->description !!}</td>
                                 <td>
-                                    <a href=""  data-toggle="modal" data-target="#options">
-                                        <i class="fas fa-ellipsis-h"></i>
-                                    </a>
-                                </td>
-
-                                <div class="modal fade  custom-imodal" id="delete-store-{{$store->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-                                     aria-hidden="true">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLabel">خذف قسم</h5>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body custom-addpro">
-                                                <div class="add-form">
-                                                    <div class="contact-page">
-                                                        <form action="{{ route('store.destroy', $store->id) }}" method="post">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <h2>هل تريد خذف متجر {{ $store->name }} ؟</h2>
-
-                                                            <div class="submit-btn">
-                                                                <button type="submit" class="brown">حذف</button>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                    <div class="dropdown">
+                                        <button class="btn btn-secondary dropdown-toggle" type="button"
+                                                id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                                                aria-expanded="false">
+                                            اختيارات
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <a href="#" class="dropdown-item text-success" data-toggle="modal"
+                                               data-target="#edit-store-{{$store->id}}">تعديل</a>
+                                            <a href="#" class="dropdown-item text-danger" data-toggle="modal"
+                                               data-target="#delete-store-{{$store->id}}">حذف</a>
                                         </div>
                                     </div>
-                                </div>
+                                </td>
+                                @include('dashboard.stores.modal_edit')
+                                @include('dashboard.stores.modal_delete')
                             </tr>
                         @endforeach
-
-
                         </tbody>
                     </table>
+                    <a href="#" data-toggle="modal" data-target="#add-store"
+                       class="btn btn-success">اضافة متجر <i class="fa fa-plus"></i>
+                    </a>
+                    @include('dashboard.stores.modal_create')
                 </div>
             </div>
         </div>
     </div>
+@endsection
+@section('script')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/trix/1.3.0/trix.min.js"></script>
 @endsection

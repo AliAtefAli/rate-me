@@ -16,7 +16,7 @@ class SubscriptionController extends Controller
      */
     public function index()
     {
-        $subscriptions = Subscription::all();
+        $subscriptions = Subscription::latest()->paginate(25);
         return view('dashboard.subscriptions.index', compact('subscriptions'));
     }
 
